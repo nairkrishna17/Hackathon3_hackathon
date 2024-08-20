@@ -1,0 +1,85 @@
+class Auction:
+    def __init__(self, title, description, starting_price):
+        self.title = title
+        self.description = description
+        self.starting_price = starting_price
+        self.current_bid = starting_price
+        self.highest_bidder = None
+
+    def place_bid(self, bidder, bid_amount):
+        if bid_amount > self.current_bid:
+            self.current_bid = bid_amount
+            self.highest_bidder = bidder
+            print(f"Bid placed successfully by {bidder} for ${bid_amount}!")
+        else:
+            print("Bid amount must be higher than the current bid.")
+
+    def __str__(self):
+        return (f"Auction: {self.title}\n"
+                f"Description: {self.description}\n"
+                f"Starting Price: ${self.starting_price}\n"
+                f"Current Bid: ${self.current_bid}\n"
+                f"Highest Bidder: {self.highest_bidder if self.highest_bidder else 'None'}\n")
+
+
+class AuctionSystem:
+    def __init__(self):
+        self.auctions = {}
+        self.auction_id_counter = 1
+
+    def create_auction(self, title, description, starting_price):
+        auction = Auction(title, description, starting_price)
+        self.auctions[self.auction_id_counter] = auction
+        print(f"Auction '{title}' created successfully with ID {self.auction_id_counter}.")
+        self.auction_id_counter += 1
+
+    def view_auctions(self):
+        if not self.auctions:
+            print("No auctions available.")
+        else:
+            for auction_id, auction in self.auctions.items():
+                print(f"Auction ID: {auction_id}\n{auction}")
+
+    def place_bid(self, auction_id, bidder, bid_amount):
+        auction = self.auctions.get(auction_id)
+        if auction:
+            auction.place_bid(bidder, bid_amount)
+        else:
+            print("Invalid auction ID.")
+
+
+def main():
+    auction_system = AuctionSystem()
+
+    while True:
+        print("\nOnline Auction System")
+        print("1. Create Auction")
+        print("2. View Auctions")
+        print("3. Place Bid")
+        print("4. Exit")
+        choice = input("Select an option: ")
+
+        if choice == '1':
+            title = input("Enter auction title: ")
+            description = input("Enter auction description: ")
+            starting_price = float(input("Enter starting price: "))
+            auction_system.create_auction(title, description, starting_price)
+
+        elif choice == '2':
+            auction_system.view_auctions()
+
+        elif choice == '3':
+            auction_id = int(input("Enter auction ID: "))
+            bidder = input("Enter your name: ")
+            bid_amount = float(input("Enter your bid amount: "))
+            auction_system.place_bid(auction_id, bidder, bid_amount)
+
+        elif choice == '4':
+            print("Exiting the auction system.")
+            break
+
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    main()
